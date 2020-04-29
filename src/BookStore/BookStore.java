@@ -210,7 +210,7 @@ public class BookStore
 		if((cusType>=1)&&(cusType<=3)){			
 			if((balance>=0)&&(balance<1000)) discount=3;
 			else if((balance>=1000)&&(balance<2000)) discount=5;
-			else if((balance>=2000)&&(balance<3000)) discount=7;
+			else if((balance>=2000)&&(balance<3000)) discount=7;	
 			else if((balance>=3000)&&(balance<4000)) discount=10;
 			else if((balance>=4000)&&(balance<5000)) discount=15;
 			else if((balance>=5000)) discount = 20;	
