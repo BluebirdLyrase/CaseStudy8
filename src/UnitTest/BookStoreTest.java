@@ -1,7 +1,6 @@
 package UnitTest;
 
 import static org.junit.Assert.*;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,30 +9,64 @@ import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import BookStore.*;
 
-
+@RunWith(Parameterized.class)
 public class BookStoreTest {
 	
 
 	BookStore bookStore;
-	ArrayList<Integer> customer_type = new ArrayList<Integer>();
-	ArrayList<Integer> order_price = new ArrayList<Integer>();
-	ArrayList<Integer> coupon_discount = new ArrayList<Integer>();
-	ArrayList<Integer> total_discount = new ArrayList<Integer>();
-	ArrayList<Double> grand_price = new ArrayList<Double>();
+//	ArrayList<Integer> customer_type = new ArrayList<Integer>();
+//	ArrayList<Integer> order_price = new ArrayList<Integer>();
+//	ArrayList<Integer> coupon_discount = new ArrayList<Integer>();
+//	ArrayList<Integer> total_discount = new ArrayList<Integer>();
+//	ArrayList<Double> grand_price = new ArrayList<Double>();
+	
+	int customer_type = 0;
+	int order_price = 0;
+	int coupon_discount = 0;
+	int total_discount = 0;
+	double grand_price = 0;
 	int actualDiscount;
+	
+	public BookStoreTest(int customer_type, int order_price, int coupon_discount, int total_discount,
+			double grand_price) {
+		super();
+		this.customer_type = customer_type;
+		this.order_price = order_price;
+		this.coupon_discount = coupon_discount;
+		this.total_discount = total_discount;
+		this.grand_price = grand_price;
+	}
 
 	@Before
 	public void setUp() throws Exception {
 		bookStore = new BookStore();
-		String csvFile = "NewTestCase.csv";
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		bookStore = null;
+	}
+	
+
+		
+	@Parameters
+    public static List<Object[]> data() {
+    List<Object[]> list = new ArrayList<Object[]>();
+	String csvFile = "NewTestCase.csv";
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ",";
-
+		int cus_type = 0;
+	
 		try {
 
 			br = new BufferedReader(new FileReader(csvFile));
@@ -45,22 +78,24 @@ public class BookStoreTest {
 					String[] testcase = line.split(cvsSplitBy);
 					switch (testcase[2]) {
 					case "Bronze":
-						customer_type.add(1);
+						 cus_type = 1;
 						break;
 					case "Silver":
-						customer_type.add(2);
+						 cus_type = 2;
 						break;
 					case "Gold":
-						customer_type.add(3);
+						 cus_type = 3;
 						break;
 					default:
-						customer_type.add(999);
+						 cus_type = 999;
 						break;
 					}
-					order_price.add(Integer.parseInt(testcase[5]));
-					coupon_discount.add(Integer.parseInt(testcase[7]));
-					total_discount.add(Integer.parseInt(testcase[8]));
-					grand_price.add(Double.parseDouble(testcase[9]));
+
+					int order_price = Integer.parseInt(testcase[5]);
+					int coupon_discount = Integer.parseInt(testcase[7]);
+					int total_discount = Integer.parseInt(testcase[8]);
+					double grand_price = Double.parseDouble(testcase[9]);
+					list.add(new Object[] { cus_type,order_price,coupon_discount,total_discount,grand_price});
 				}
 
 			}
@@ -78,32 +113,39 @@ public class BookStoreTest {
 				}
 			}
 		}
-	}
+		
+        
 
-	@After
-	public void tearDown() throws Exception {
-		bookStore = null;
-	}
-
+        return list;
+    }
 	@Test
 	public void testGetDiscount() {
-		System.out.print(order_price.size()+"|"+customer_type.size());
-		for (int i = 0; i < order_price.size(); i++) {
-			int expectedDiscount = total_discount.get(i);
-			actualDiscount = BookStore.getDiscount(order_price.get(i), customer_type.get(i), coupon_discount.get(i));
-			System.out.println(i+"Customer:"+customer_type.get(i)+" order_price:"+order_price.get(i)+"  coupon_discount:"+coupon_discount.get(i));
-			System.out.println(i+"total_discount:"+total_discount.get(i)+" actual_dis:"+actualDiscount);
+			int expectedDiscount = total_discount ;
+			actualDiscount = BookStore.getDiscount(order_price, customer_type, coupon_discount);
+			System.out.println("Customer:"+customer_type+" order_price:"+order_price+"  coupon_discount:"+coupon_discount);
+			System.out.println("total_discount:"+total_discount+" actual_dis:"+actualDiscount);
 			assertEquals("Error: Expected is not equal to Actual", expectedDiscount, actualDiscount);
-		}
-
 	}
 
 	@Test
 	public void testGetDiscountBalance() {
-//		for (int i = 0; i < order_price.size(); i++) {
-//			double actualNetBal = bookStore.getDiscountBalance(order_price.get(i), total_discount.get(i));
-//			assertEquals("Error: Expected is not equal to Actual", grand_price.get(i), actualNetBal, 0.0);
-//		}
+			bookStore.addShoppingCart(0, null, null);
+			bookStore.addCartDetail(0, null, null, order_price);
+			double actualNetBal = bookStore.getDiscountBalance(0, total_discount);
+			assertEquals("Error: Expected is not equal to Actual", grand_price, actualNetBal, 0.0);
 	}
+	
+	@Test
+		public void testPerchase() {
+			bookStore.addShoppingCart(0, null, null);
+			bookStore.addCartDetail(0, null, null, order_price);
+			int discount = BookStore.getDiscount(order_price, customer_type, coupon_discount);
+//			double paid = 10000.0; 	
+//			double expectedChange = 0.0;
+			bookStore.purchase(0, paid, discount);
+//			assertEquals()
+	}
+	
+	
 
 }
