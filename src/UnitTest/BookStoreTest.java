@@ -125,7 +125,7 @@ public class BookStoreTest {
 			actualDiscount = BookStore.getDiscount(order_price, customer_type, coupon_discount);
 			System.out.println("Customer:"+customer_type+" order_price:"+order_price+"  coupon_discount:"+coupon_discount);
 			System.out.println("total_discount:"+total_discount+" actual_dis:"+actualDiscount);
-			assertEquals("Error: Expected is not equal to Actual", expectedDiscount, actualDiscount);
+				assertEquals("Error: Expected is not equal to Actual", expectedDiscount, actualDiscount);
 	}
 
 	@Test
