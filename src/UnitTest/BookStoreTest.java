@@ -23,27 +23,26 @@ public class BookStoreTest {
 	
 
 	BookStore bookStore;
-//	ArrayList<Integer> customer_type = new ArrayList<Integer>();
-//	ArrayList<Integer> order_price = new ArrayList<Integer>();
-//	ArrayList<Integer> coupon_discount = new ArrayList<Integer>();
-//	ArrayList<Integer> total_discount = new ArrayList<Integer>();
-//	ArrayList<Double> grand_price = new ArrayList<Double>();
 	
-	int customer_type = 0;
-	int order_price = 0;
-	int coupon_discount = 0;
-	int total_discount = 0;
-	double grand_price = 0;
+	int customer_type;
+	int order_price;
+	int coupon_discount;
+	int total_discount;
+	double grand_price;
 	int actualDiscount;
+	double paid;
+	double expected_change;
 	
 	public BookStoreTest(int customer_type, int order_price, int coupon_discount, int total_discount,
-			double grand_price) {
+			double grand_price,double paid,double expected_change) {
 		super();
 		this.customer_type = customer_type;
 		this.order_price = order_price;
 		this.coupon_discount = coupon_discount;
 		this.total_discount = total_discount;
 		this.grand_price = grand_price;
+		this.paid = paid;
+		this.expected_change = expected_change;
 	}
 
 	@Before
@@ -95,7 +94,9 @@ public class BookStoreTest {
 					int coupon_discount = Integer.parseInt(testcase[7]);
 					int total_discount = Integer.parseInt(testcase[8]);
 					double grand_price = Double.parseDouble(testcase[9]);
-					list.add(new Object[] { cus_type,order_price,coupon_discount,total_discount,grand_price});
+					double paid = Double.parseDouble(testcase[10]);
+					double expected_change = Double.parseDouble(testcase[11]);
+					list.add(new Object[] { cus_type,order_price,coupon_discount,total_discount,grand_price,paid,expected_change});
 				}
 
 			}
@@ -140,10 +141,8 @@ public class BookStoreTest {
 			bookStore.addShoppingCart(0, null, null);
 			bookStore.addCartDetail(0, null, null, order_price);
 			int discount = BookStore.getDiscount(order_price, customer_type, coupon_discount);
-//			double paid = 10000.0; 	
-//			double expectedChange = 0.0;
-			bookStore.purchase(0, paid, discount);
-//			assertEquals()
+			double actualChange = bookStore.purchase(0, paid, discount);
+			assertEquals("Error: Expected is not equal to Actual", expected_change, actualChange, 0.0);
 	}
 	
 	
