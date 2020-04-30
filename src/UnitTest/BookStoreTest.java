@@ -17,7 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import BookStore.*;
-
+/*
+Prepare by
+Pisit keawfung	6030213005
+Pongsakorn Thaweesamarn	6030213006
+Amornthep Phetnoi	6030213036
+*/
 @RunWith(Parameterized.class)
 public class BookStoreTest {
 	
